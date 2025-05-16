@@ -14,19 +14,17 @@ namespace iTasks
 {
     public partial class frmKanban : Form
     {
-        private KanbanController controller = new KanbanController();
-        private string username;
+     
         public frmKanban(Utilizador utilizador)
         { 
            InitializeComponent();
-            this.username = username;
+          
 
         }
         private void frmKanban_Load(object sender, EventArgs e)
         {
 
-            label1.Text = $"Bem-vindo, {nome ?? "utilizador"}!";
-
+      
         }
         private void label1_Click(object sender, EventArgs e)
         {

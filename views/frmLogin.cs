@@ -29,7 +29,7 @@ namespace iTasks
             var controller = new LoginController();
            if (controller.Login(login))
             {
-                frmJ
+                frmKanban kanban = new frmKanban(login);
                 MessageBox.Show("Login bem-sucedido!");
                 // Abrir o formulário principal, etc.
             }
