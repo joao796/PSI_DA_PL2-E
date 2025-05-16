@@ -12,6 +12,7 @@ namespace iTasks.models
     {
         public iTaskcontext() : base("Itaskdb") { }
 
+        public DbSet<Utilizador> Utilizadores { get; set; }
         public DbSet<Programador> Programadores { get; set; }
         public DbSet<Tarefa> Tarefas { get; set; }
         public DbSet<TipoTarefa> TipoTarefas { get; set; }

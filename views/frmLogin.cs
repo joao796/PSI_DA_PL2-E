@@ -1,4 +1,5 @@
-﻿using System;
+﻿using iTasks.Controller;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,6 +16,12 @@ namespace iTasks
         public frmLogin()
         {
             InitializeComponent();
+        }
+
+        private void btLogin_Click(object sender, EventArgs e)
+        {
+
+            
         }
     }
 }
