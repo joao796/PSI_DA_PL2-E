@@ -9,6 +9,6 @@ namespace iTasks.models
     public class Programador : Utilizador
     {
         public string NivelExperiencia { get; set; }
-        public int IdGestor { get; set; }
+        public Gestor Gestor { get; set; }
     }
 }
