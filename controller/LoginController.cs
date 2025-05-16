@@ -26,7 +26,10 @@ namespace iTasks.Controller
 
                 int count = (int)cmd.ExecuteScalar();
                 return count > 0;
+
+                
             }
+
         }
     }
 }

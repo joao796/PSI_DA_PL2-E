@@ -27,11 +27,11 @@ namespace iTasks
                 Password = txtPassword.Text
             };
             var controller = new LoginController();
-
-            if (controller.Login(login))
+           if (controller.Login(login))
             {
-                frmKanban kanban = new frmKanban();
-                kanban.Show();
+                frmJ
+                MessageBox.Show("Login bem-sucedido!");
+                // Abrir o formulário principal, etc.
             }
             else
             {
