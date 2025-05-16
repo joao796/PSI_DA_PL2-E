@@ -1,4 +1,5 @@
-﻿using System;
+﻿using iTasks.models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,9 +15,18 @@ namespace iTasks
         [STAThread]
         static void Main()
         {
+            using (var db = new iTaskcontext())
+            {
+                var gestor = new Gestor { Nome = "admin", Username = "admin", Password = "admin", Departamento = "Administração", GereUtilizadores = true };
+                db.Gestores.Add(gestor);
+                db.SaveChanges();
+            }
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new frmLogin());
+  
+           
         }
     }
 }
