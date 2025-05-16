@@ -1,4 +1,5 @@
 ﻿using iTasks.Controller;
+using iTasks.models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,8 +21,22 @@ namespace iTasks
 
         private void btLogin_Click(object sender, EventArgs e)
         {
+            var login = new Utilizador
+            {
+                Username = txtUsername.Text,
+                Password = txtPassword.Text
+            };
+            var controller = new LoginController();
 
-            
+            if (controller.Login(login))
+            {
+                frmKanban kanban = new frmKanban();
+                kanban.Show();
+            }
+            else
+            {
+                MessageBox.Show("Email ou senha inválidos.");
+            }
         }
     }
 }
