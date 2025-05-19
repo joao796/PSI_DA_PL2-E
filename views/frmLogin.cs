@@ -30,12 +30,12 @@ namespace iTasks
            if (controller.Login(login))
             {
                 frmKanban kanban = new frmKanban(login);
-                MessageBox.Show("Login bem-sucedido!");
-                // Abrir o formulário principal, etc.
+               
+                kanban.Show();
             }
             else
             {
-                MessageBox.Show("Email ou senha inválidos.");
+                MessageBox.Show("Username ou password incorretos.");
             }
         }
     }
