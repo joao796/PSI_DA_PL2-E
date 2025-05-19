@@ -59,5 +59,50 @@ namespace iTasks.Controller
 
             return lista;
         }
+        public bool AdicionarProgramador(Programador programador)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                string query = "INSERT INTO Utilizadors (Nome, Username, Password, , Discriminator, NivelExperiencia, Gestor ) " +
+                               "VALUES (@Nome, @Username, @Password, @Discriminator, @NivelExperiencia, @Gestor)";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Nome", programador.Nome);
+                cmd.Parameters.AddWithValue("@Username", programador.Username);
+                cmd.Parameters.AddWithValue("@Password", programador.Password);
+                cmd.Parameters.AddWithValue("@NivelExperiencia", programador.NivelExperiencia);
+                cmd.Parameters.AddWithValue("@Discriminator", "Programador");
+                cmd.Parameters.AddWithValue("@gestor", programador.Gestor);
+                int linhasAfetadas = cmd.ExecuteNonQuery();
+                return linhasAfetadas > 0;
+            }
+        }
+        public List<Programador> ListarProgramadores()
+        {
+            var lista = new List<Programador>();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                string query = "SELECT Nome, Username, NivelExperiencia FROM Utilizadors";
+                SqlCommand cmd = new SqlCommand(query, conn);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        lista.Add(new Programador
+                        {
+                            Nome = reader["Nome"].ToString(),
+                            Username = reader["Username"].ToString(),
+                            NivelExperiencia = reader["NivelExperiencia"].ToString()
+                        });
+                    }
+                }
+            }
+            return lista;
+        }
     }
 }
