@@ -8,7 +8,13 @@ namespace iTasks.models
 {
     public class Gestor : Utilizador
     {
-        public string Departamento { get; set; }
+        public Departamento Departamento { get; set; }
         public bool GereUtilizadores { get; set; }
+    }
+    public enum Departamento
+    {
+        IT,
+        Marketing,
+        Administração
     }
 }

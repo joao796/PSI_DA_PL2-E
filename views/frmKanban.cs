@@ -14,11 +14,12 @@ namespace iTasks
 {
     public partial class frmKanban : Form
     {
-     
+        private KanbanController controller = new KanbanController();
+
         public frmKanban(Utilizador utilizador)
         { 
            InitializeComponent();
-          
+            label1.Text = "Bem vindo: " + frmLogin.SessaoUsuario.Username;
 
         }
         private void frmKanban_Load(object sender, EventArgs e)
@@ -30,11 +31,19 @@ namespace iTasks
         {
 
         }
-
+      
         private void gerirUtilizadoresToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            frmGereUtilizadores formGereUtilizadores = new frmGereUtilizadores();
-            formGereUtilizadores.Show();
+
+            if (controller.PodeGerirUtilizadores())
+            {
+                frmGereUtilizadores formGereUtilizadores = new frmGereUtilizadores();
+                formGereUtilizadores.Show();
+            }
+            else
+            {
+                MessageBox.Show("Não tem permissões para gerir utilizadores.");
+            }
         }
 
         private void frmKanban_Load_1(object sender, EventArgs e)

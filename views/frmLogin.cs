@@ -18,9 +18,13 @@ namespace iTasks
         {
             InitializeComponent();
         }
-
+        public static class SessaoUsuario
+        {
+            public static string Username { get; set; }
+        }
         private void btLogin_Click(object sender, EventArgs e)
         {
+
             var login = new Utilizador
             {
                 Username = txtUsername.Text,
@@ -29,6 +33,7 @@ namespace iTasks
             var controller = new LoginController();
            if (controller.Login(login))
             {
+                SessaoUsuario.Username = login.Username;
                 frmKanban kanban = new frmKanban(login);
                
                 kanban.Show();

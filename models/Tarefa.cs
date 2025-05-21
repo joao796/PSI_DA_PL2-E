@@ -20,6 +20,12 @@ namespace iTasks.models
         public DateTime DataRealInicio { get; set; }
         public DateTime DataRealFim { get; set; }
         public DateTime DataCriacao { get; set; }
-        public string EstadoAtual { get; set; }
+        public EstadoAtual EstadoAtual { get; set; }
+    }
+    public enum EstadoAtual
+    {
+       ToDo,
+       Doing,
+       done
     }
 }

@@ -8,7 +8,12 @@ namespace iTasks.models
 {
     public class Programador : Utilizador
     {
-        public string NivelExperiencia { get; set; }
+        public NivelExperiencia NivelExperiencia { get; set; }
         public Gestor Gestor { get; set; }
+    }
+    public enum NivelExperiencia
+    {
+        Júnior,
+        Sénior
     }
 }
