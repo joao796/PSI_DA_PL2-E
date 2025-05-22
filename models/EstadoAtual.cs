@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace iTasks.models
 {
-   public class TipoTarefa
-   {
-            public int Id { get; set; }
-            public string Nome { get; set; }
-   }
+    public enum EstadoAtual
+    {
+        ToDo,
+        Doing,
+        Done
+    }
 }
