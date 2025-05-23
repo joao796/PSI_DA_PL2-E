@@ -12,13 +12,8 @@ namespace iTasks.models
         public int Id { get; set; }
 
         // Relações
-        public int GestorId { get; set; }
         public Gestor Gestor { get; set; }
-
-        public int ProgramadorId { get; set; }
         public Programador Programador { get; set; }
-
-        public int TipoTarefaId { get; set; }
         public TipoTarefa TipoTarefa { get; set; }
 
         // Dados

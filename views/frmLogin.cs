@@ -35,8 +35,12 @@ namespace iTasks
             {
                 SessaoUsuario.Username = login.Username;
                 frmKanban kanban = new frmKanban(login);
-               
-                kanban.Show();
+
+                this.Hide();
+                kanban.ShowDialog();
+                    this.Show();
+                    txtUsername.Clear();
+                    txtPassword.Clear();
             }
             else
             {
