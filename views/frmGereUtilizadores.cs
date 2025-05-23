@@ -16,6 +16,7 @@ namespace iTasks
     public partial class frmGereUtilizadores : Form
     {
         GereUtilizadoresController controller = new GereUtilizadoresController();
+
         public frmGereUtilizadores()
         {
             InitializeComponent();
@@ -23,6 +24,7 @@ namespace iTasks
             cbNivelProg.DataSource = Enum.GetValues(typeof(NivelExperiencia));
             CarregarGestores();
             AtualizarListaGestores();
+            AtualizarListaProgramadores();
         }
 
         private void btGravarGestor_Click(object sender, EventArgs e)
@@ -36,11 +38,11 @@ namespace iTasks
                 GereUtilizadores = chkGereUtilizadores.Checked
             };
 
-
             if (controller.AdicionarGestor(gestor))
             {
                 MessageBox.Show("Gestor adicionado com sucesso!");
                 AtualizarListaGestores();
+                CarregarGestores();
             }
             else
             {
@@ -58,13 +60,14 @@ namespace iTasks
                 lstListaGestores.Items.Add($"{g.Nome} ({g.Username}) - {g.Departamento}");
             }
         }
+
         private void CarregarGestores()
         {
             var gestores = controller.ListarGestores();
 
             cbGestorProg.DataSource = gestores;
-            cbGestorProg.DisplayMember = "Nome";    
-            cbGestorProg.ValueMember = "Id";  
+            cbGestorProg.DisplayMember = "Nome";
+            cbGestorProg.ValueMember = "Id";
         }
 
         private void btGravarProg_Click(object sender, EventArgs e)
@@ -80,7 +83,6 @@ namespace iTasks
                     Id = (int)cbGestorProg.SelectedValue
                 }
             };
-
 
             if (controller.AdicionarProgramador(programador))
             {
@@ -100,9 +102,9 @@ namespace iTasks
 
             foreach (var p in programadores)
             {
-                lstListaProgramadores.Items.Add($"{p.Nome} ({p.Username}) - Gestor: {p.Gestor?.Nome ?? "Nenhum"}");
+                lstListaProgramadores.Items.Add($"{p.Nome} ({p.Username}) - Gestor: {p.Gestor?.Username }");
             }
         }
     }
- }
+}
 

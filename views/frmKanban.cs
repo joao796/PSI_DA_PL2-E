@@ -34,8 +34,7 @@ namespace iTasks
       
         private void gerirUtilizadoresToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
-            if (controller.PodeGerirUtilizadores())
+            if (controller.PodeGerirUtilizadores(frmLogin.SessaoUsuario.Username))
             {
                 frmGereUtilizadores formGereUtilizadores = new frmGereUtilizadores();
                 formGereUtilizadores.Show();

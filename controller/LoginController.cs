@@ -11,20 +11,15 @@ namespace iTasks.Controller
 {
     public class LoginController
     {
-        private string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Itaskdb;";
-
         public bool Login(Utilizador login)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (var context = new iTaskcontext())
             {
-                conn.Open();
-                string query = "SELECT COUNT(*) FROM Utilizadors WHERE Username = @Username AND Password = @Password";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@Username", login.Username);
-                cmd.Parameters.AddWithValue("@Password", login.Password);
+                var exists = (from u in context.Utilizadores
+                              where u.Username == login.Username && u.Password == login.Password
+                              select u).Any();
 
-                int count = (int)cmd.ExecuteScalar();
-                return count > 0;
+                return exists;
             }
         }
     }

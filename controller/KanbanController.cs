@@ -1,49 +1,39 @@
-﻿using System;
+﻿using iTasks.models;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace iTasks.Controller
 {
     class KanbanController
     {
-        string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=Itaskdb;";
+        
         public string CurrentUsername { get; set; }
 
         public string GetNomeDoUtilizador(string username)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (var context = new iTaskcontext())
             {
-                conn.Open();
+                var utilizador = context.Utilizadores
+                    .Where(u => u.Username == username)
+                    .Select(u => u.Nome)
+                    .FirstOrDefault();
 
-                string query = "SELECT Nome FROM Utilizadors WHERE Username = @Username";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@Username", username);
-
-                object result = cmd.ExecuteScalar();
-
-                return result != null ? result.ToString() : null;
+                return utilizador; // retorna string ou null se não encontrado
             }
         }
-        public bool PodeGerirUtilizadores()
+        public bool PodeGerirUtilizadores(string username)
         {
-            string currentUsername = frmLogin.SessaoUsuario.Username;
+            if (string.IsNullOrEmpty(username))
+                return false;
 
-            if (string.IsNullOrEmpty(currentUsername))
-                return false; // Ninguém logado
-
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (var context = new iTaskcontext())
             {
-                conn.Open();
-                string query = "SELECT GereUtilizadores FROM Utilizadors WHERE Username = @Username";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@Username", currentUsername);
-
-                object result = cmd.ExecuteScalar();
-
-                return result != null && Convert.ToBoolean(result);
+                return context.Gestores.Any(g => g.Username == username && g.GereUtilizadores);
             }
         }
     }
