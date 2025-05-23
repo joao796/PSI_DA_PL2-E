@@ -36,5 +36,15 @@ namespace iTasks.Controller
                 return context.Gestores.Any(g => g.Username == username && g.GereUtilizadores);
             }
         }
+        public bool PodeCriarTarefa(string username)
+        {
+            if (string.IsNullOrEmpty(username))
+                return false;
+
+            using (var context = new iTaskcontext())
+            {
+                return context.Gestores.Any(g => g.Username == username);
+            }
+        }
     }
 }

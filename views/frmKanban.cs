@@ -38,10 +38,11 @@ namespace iTasks
             {
                 frmGereUtilizadores formGereUtilizadores = new frmGereUtilizadores();
                 formGereUtilizadores.Show();
+                this.Hide();
             }
             else
             {
-                MessageBox.Show("Não tem permissões para gerir utilizadores.");
+                MessageBox.Show("Não tem permissões entrar aqui");
             }
         }
 
@@ -53,6 +54,34 @@ namespace iTasks
         private void sairToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void btNova_Click(object sender, EventArgs e)
+        {
+            if (controller.PodeCriarTarefa(frmLogin.SessaoUsuario.Username))
+            {
+                frmDetalhesTarefa formDetalhesTarefa = new frmDetalhesTarefa();
+                formDetalhesTarefa.Show();
+                this.Hide();
+            }
+            else
+            {
+                MessageBox.Show("Não tem permissões entrar aqui");
+            }
+        }
+
+        private void gerirTiposDeTarefasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (controller.PodeCriarTarefa(frmLogin.SessaoUsuario.Username))
+            {
+                frmGereTiposTarefas formGereTiposTarefas = new frmGereTiposTarefas();
+                formGereTiposTarefas.Show();
+                this.Hide();
+            }
+            else
+            {
+                MessageBox.Show("Não tem permissões entrar aqui");
+            }
         }
     }
 }
