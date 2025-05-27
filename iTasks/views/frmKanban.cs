@@ -38,7 +38,6 @@ namespace iTasks
             {
                 frmGereUtilizadores formGereUtilizadores = new frmGereUtilizadores();
                 formGereUtilizadores.Show();
-                this.Hide();
             }
             else
             {
@@ -62,7 +61,6 @@ namespace iTasks
             {
                 frmDetalhesTarefa formDetalhesTarefa = new frmDetalhesTarefa();
                 formDetalhesTarefa.Show();
-                this.Hide();
             }
             else
             {
@@ -76,7 +74,6 @@ namespace iTasks
             {
                 frmGereTiposTarefas formGereTiposTarefas = new frmGereTiposTarefas();
                 formGereTiposTarefas.Show();
-                this.Hide();
             }
             else
             {

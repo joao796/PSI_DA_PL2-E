@@ -35,6 +35,7 @@
             this.txtId = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btGravar = new System.Windows.Forms.Button();
+            this.btApagar = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -56,6 +57,7 @@
             this.lstLista.Name = "lstLista";
             this.lstLista.Size = new System.Drawing.Size(268, 366);
             this.lstLista.TabIndex = 0;
+            this.lstLista.SelectedIndexChanged += new System.EventHandler(this.lstLista_SelectedIndexChanged);
             // 
             // txtDesc
             // 
@@ -98,6 +100,18 @@
             this.btGravar.TabIndex = 31;
             this.btGravar.Text = "Gravar Dados";
             this.btGravar.UseVisualStyleBackColor = true;
+            this.btGravar.Click += new System.EventHandler(this.btGravar_Click);
+            // 
+            // btApagar
+            // 
+            this.btApagar.Location = new System.Drawing.Point(359, 95);
+            this.btApagar.Name = "btApagar";
+            this.btApagar.Size = new System.Drawing.Size(141, 23);
+            this.btApagar.TabIndex = 32;
+            this.btApagar.Text = "Apagar";
+            this.btApagar.UseVisualStyleBackColor = true;
+            this.btApagar.Click += new System.EventHandler(this.btApagar_Click);
+            this.Controls.Add(this.btApagar);
             // 
             // frmGereTiposTarefas
             // 
@@ -127,5 +141,6 @@
         private System.Windows.Forms.TextBox txtId;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btGravar;
+        private System.Windows.Forms.Button btApagar;
     }
 }
