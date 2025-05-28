@@ -66,10 +66,11 @@ namespace iTasks
 
             string username = frmLogin.SessaoUsuario.Username;
             List<Tarefa> tarefas;
+            Utilizador utilizador;
 
             using (var db = new iTaskcontext())
             {
-                var utilizador = db.Utilizadores.FirstOrDefault(u => u.Username == username);
+                utilizador = db.Utilizadores.FirstOrDefault(u => u.Username == username);
 
                 if (utilizador is Programador)
                 {
@@ -88,21 +89,39 @@ namespace iTasks
             foreach (var t in tarefas)
             {
                 string texto = t.ToStringPara(frmLogin.SessaoUsuario.Username);
+                var item = new TarefaListBoxItem(t, texto);
 
                 switch (t.EstadoAtual)
                 {
                     case EstadoAtual.ToDo:
-                        lstTodo.Items.Add(texto);
+                        lstTodo.Items.Add(item);
                         break;
                     case EstadoAtual.Doing:
-                        lstDoing.Items.Add(texto);
+                        lstDoing.Items.Add(item);
                         break;
                     case EstadoAtual.Done:
-                        lstDone.Items.Add(texto);
+                        lstDone.Items.Add(item);
                         break;
                 }
             }
         }
+        public class TarefaListBoxItem
+        {
+            public Tarefa Tarefa { get; set; }
+            public string Texto { get; set; }
+
+            public TarefaListBoxItem(Tarefa tarefa, string texto)
+            {
+                Tarefa = tarefa;
+                Texto = texto;
+            }
+
+            public override string ToString()
+            {
+                return Texto;
+            }
+        }
+
 
         private void btNova_Click(object sender, EventArgs e)
         {
@@ -130,5 +149,39 @@ namespace iTasks
                 MessageBox.Show("Não tem permissões para criar tarefas.");
             }
         }
+
+        private void lstTarefa_DoubleClick(object sender, EventArgs e)
+        {
+            ListBox lista = sender as ListBox;
+            if (lista == null || lista.SelectedItem == null)
+                return;
+
+            TarefaListBoxItem item = lista.SelectedItem as TarefaListBoxItem;
+            if (item == null)
+                return;
+
+            Tarefa tarefaSelecionada = item.Tarefa;
+
+            using (var db = new iTaskcontext())
+            {
+                var gestor = db.Gestores.FirstOrDefault(g => g.Username == frmLogin.SessaoUsuario.Username);
+                if (gestor == null)
+                {
+                    MessageBox.Show("Apenas gestores podem editar tarefas.");
+                    return;
+                }
+
+                var form = new frmDetalhesTarefa();
+                form.gestorLogado = gestor;
+                form.tarefaAtual = db.Tarefas
+                    .Include("Programador")
+                    .Include("TipoTarefa")
+                    .FirstOrDefault(t => t.Id == tarefaSelecionada.Id);
+
+                form.ShowDialog();
+                CarregarTarefasKanban();
+            }
+        }
+
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using iTasks.models;
 
+
 namespace iTasks.models
 {
     public class Tarefa
@@ -35,6 +36,11 @@ namespace iTasks.models
 
         public EstadoAtual EstadoAtual { get; set; }
 
+
+        public override string ToString()
+        {
+            return $"#{Id} - {Descricao}";
+        }
         public string ToStringPara(string username)
         {
             if (Programador != null && Programador.Username != username)
@@ -42,6 +48,7 @@ namespace iTasks.models
             else
                 return $"#{Id} - {Descricao}";
         }
+
     }
     public enum EstadoAtual
     {
