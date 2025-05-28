@@ -1,6 +1,7 @@
 ﻿using iTasks.models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -44,6 +45,36 @@ namespace iTasks.Controller
             using (var context = new iTaskcontext())
             {
                 return context.Gestores.Any(g => g.Username == username);
+            }
+        }
+
+        public List<Tarefa> ObterTarefasDoProgramador(string username)
+        {
+            using (var context = new iTaskcontext())
+            {
+                var prog = context.Programadores.FirstOrDefault(p => p.Username == username);
+                if (prog == null)
+                    return new List<Tarefa>();
+
+                return context.Tarefas
+                    .Where(t => t.ProgramadorId == prog.Id)
+                    .OrderBy(t => t.OrdemExecucao)
+                    .ToList();
+            }
+        }
+        public List<Tarefa> ObterTarefasDoGestor(string username)
+        {
+            using (var context = new iTaskcontext())
+            {
+                var gestor = context.Gestores.FirstOrDefault(g => g.Username == username);
+                if (gestor == null)
+                    return new List<Tarefa>();
+
+                return context.Tarefas
+                    .Where(t => t.GestorId == gestor.Id)
+                    .Include("Programador")
+                    .OrderBy(t => t.OrdemExecucao)
+                    .ToList();
             }
         }
     }

@@ -255,7 +255,6 @@
             this.label1.Size = new System.Drawing.Size(187, 16);
             this.label1.TabIndex = 9;
             this.label1.Text = "Bem vindo: <Nome Utilizador>";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // btPrevisao
             // 
@@ -286,7 +285,7 @@
             this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "frmKanban";
             this.Text = "frmKanban";
-            this.Load += new System.EventHandler(this.frmKanban_Load_1);
+            this.Load += new System.EventHandler(this.frmKanban_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);

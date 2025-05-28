@@ -13,7 +13,9 @@ namespace iTasks.models
 
         // Relações
         public Gestor Gestor { get; set; }
+        public int GestorId { get; set; }
         public Programador Programador { get; set; }
+        public int ProgramadorId { get; set; }
         public TipoTarefa TipoTarefa { get; set; }
         public int TipoTarefaId { get; set; }
 
@@ -27,15 +29,24 @@ namespace iTasks.models
         public DateTime DataPrevistaInicio { get; set; }
         public DateTime DataPrevistaFim { get; set; }
 
-        public DateTime DataRealInicio { get; set; }
-        public DateTime DataRealFim { get; set; }
+        // ? — isso é necessário porque as datas podem estar em branco, quando a tarefa está em ToDo ou Doing.
+        public DateTime? DataRealInicio { get; set; }
+        public DateTime? DataRealFim { get; set; }
 
         public EstadoAtual EstadoAtual { get; set; }
+
+        public string ToStringPara(string username)
+        {
+            if (Programador != null && Programador.Username != username)
+                return $"#{Id} - {Descricao} ({Programador.Nome})";
+            else
+                return $"#{Id} - {Descricao}";
+        }
     }
     public enum EstadoAtual
     {
        ToDo,
        Doing,
-       done
+       Done
     }
 }
