@@ -19,7 +19,7 @@ namespace iTasks
         public frmKanban(Utilizador utilizador)
         { 
            InitializeComponent();
-            label1.Text = "Bem vindo: " + frmLogin.SessaoUsuario.Username;
+            label1.Text = "Bem vindo: " + frmLogin.SessaoUtilizador.Username;
 
         }
         private void frmKanban_Load(object sender, EventArgs e)
@@ -34,7 +34,7 @@ namespace iTasks
 
         private void gerirUtilizadoresToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (controller.PodeGerirUtilizadores(frmLogin.SessaoUsuario.Username))
+            if (controller.PodeGerirUtilizadores(frmLogin.SessaoUtilizador.Username))
             {
                 frmGereUtilizadores formGereUtilizadores = new frmGereUtilizadores();
                 formGereUtilizadores.Show();
@@ -47,7 +47,7 @@ namespace iTasks
 
         private void gerirTiposDeTarefasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (controller.PodeCriarTarefa(frmLogin.SessaoUsuario.Username))
+            if (controller.PodeCriarTarefa(frmLogin.SessaoUtilizador.Username))
             {
                 frmGereTiposTarefas formGereTiposTarefas = new frmGereTiposTarefas();
                 formGereTiposTarefas.Show();
@@ -64,7 +64,7 @@ namespace iTasks
             lstDoing.Items.Clear();
             lstDone.Items.Clear();
 
-            string username = frmLogin.SessaoUsuario.Username;
+            string username = frmLogin.SessaoUtilizador.Username;
             List<Tarefa> tarefas;
             Utilizador utilizador;
 
@@ -88,7 +88,7 @@ namespace iTasks
 
             foreach (var t in tarefas)
             {
-                string texto = t.ToStringPara(frmLogin.SessaoUsuario.Username);
+                string texto = t.ToStringPara(frmLogin.SessaoUtilizador.Username);
                 var item = new TarefaListBoxItem(t, texto);
 
                 switch (t.EstadoAtual)
@@ -125,12 +125,12 @@ namespace iTasks
 
         private void btNova_Click(object sender, EventArgs e)
         {
-            if (controller.PodeCriarTarefa(frmLogin.SessaoUsuario.Username))
+            if (controller.PodeCriarTarefa(frmLogin.SessaoUtilizador.Username))
             {
                 using (var db = new iTaskcontext())
                 {
                     // passa o gestor logado a partir do username
-                    var gestor = db.Gestores.FirstOrDefault(g => g.Username == frmLogin.SessaoUsuario.Username);
+                    var gestor = db.Gestores.FirstOrDefault(g => g.Username == frmLogin.SessaoUtilizador.Username);
                     if (gestor != null)
                     {
                         frmDetalhesTarefa formDetalhesTarefa = new frmDetalhesTarefa();
@@ -164,7 +164,7 @@ namespace iTasks
 
             using (var db = new iTaskcontext())
             {
-                var gestor = db.Gestores.FirstOrDefault(g => g.Username == frmLogin.SessaoUsuario.Username);
+                var gestor = db.Gestores.FirstOrDefault(g => g.Username == frmLogin.SessaoUtilizador.Username);
                 if (gestor == null)
                 {
                     MessageBox.Show("Apenas gestores podem editar tarefas.");
@@ -183,5 +183,96 @@ namespace iTasks
             }
         }
 
+        private void btSetDoing_Click(object sender, EventArgs e)
+        {
+            
+                if (lstTodo.SelectedItem == null)
+                {
+                    MessageBox.Show("Selecione uma tarefa.");
+                    return;
+                }
+
+                var itemSelecionado = (TarefaListBoxItem)lstTodo.SelectedItem;
+                var tarefaSelecionada = itemSelecionado.Tarefa;
+                var controller = new KanbanController();
+
+                bool sucesso = controller.MudarEstadoParaDoing(tarefaSelecionada.Id);
+
+            if (sucesso)
+                {
+                    // Atualiza o estado local
+                    tarefaSelecionada.EstadoAtual = EstadoAtual.Doing;
+
+                    // Atualiza visualmente as listas
+                    lstTodo.Items.Remove(itemSelecionado);
+                    var novoItem = new TarefaListBoxItem(tarefaSelecionada, tarefaSelecionada.ToString());
+                    lstDoing.Items.Add(novoItem);
+                }
+                else
+                {
+                    MessageBox.Show("Erro ao atualizar a tarefa.");
+                }
+            
+        }
+
+        private void btSetTodo_Click(object sender, EventArgs e)
+        {
+            if (lstDoing.SelectedItem == null)
+            {
+                MessageBox.Show("Selecione uma tarefa.");
+                return;
+            }
+
+            var itemSelecionado = (TarefaListBoxItem)lstDoing.SelectedItem;
+            var tarefaSelecionada = itemSelecionado.Tarefa;
+            var controller = new KanbanController();
+
+            bool sucesso = controller.MudarEstadoParaToDo(tarefaSelecionada.Id);
+
+            if (sucesso)
+            {
+                // Atualiza o estado local
+                tarefaSelecionada.EstadoAtual = EstadoAtual.ToDo;
+
+                // Atualiza visualmente as listas
+                lstDoing.Items.Remove(itemSelecionado);
+                var novoItem = new TarefaListBoxItem(tarefaSelecionada, tarefaSelecionada.ToString());
+                lstTodo.Items.Add(novoItem);
+            }
+            else
+            {
+                MessageBox.Show("Erro ao atualizar a tarefa.");
+            }
+        }
+
+        private void btSetDone_Click(object sender, EventArgs e)
+        {
+            if (lstDoing.SelectedItem == null)
+            {
+                MessageBox.Show("Selecione uma tarefa.");
+                return;
+            }
+
+            var itemSelecionado = (TarefaListBoxItem)lstDoing.SelectedItem;
+            var tarefaSelecionada = itemSelecionado.Tarefa;
+            var controller = new KanbanController();
+
+            bool sucesso = controller.MudarEstadoParaDone(tarefaSelecionada.Id);
+
+            if (sucesso)
+            {
+                // Atualiza o estado local
+                tarefaSelecionada.EstadoAtual = EstadoAtual.Done;
+
+                // Atualiza visualmente as listas
+                lstDoing.Items.Remove(itemSelecionado);
+                var novoItem = new TarefaListBoxItem(tarefaSelecionada, tarefaSelecionada.ToString());
+                lstDone.Items.Add(novoItem);
+            }
+            else
+            {
+                MessageBox.Show("Erro ao atualizar a tarefa.");
+            }
+        }
     }
 }

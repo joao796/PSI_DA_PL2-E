@@ -18,7 +18,7 @@ namespace iTasks
         {
             InitializeComponent();
         }
-        public static class SessaoUsuario
+        public static class SessaoUtilizador
         {
             public static string Username { get; set; }
         }
@@ -33,7 +33,7 @@ namespace iTasks
             var controller = new LoginController();
            if (controller.Login(login))
             {
-                SessaoUsuario.Username = login.Username;
+                SessaoUtilizador.Username = login.Username;
                 frmKanban kanban = new frmKanban(login);
 
                 this.Hide();
@@ -46,6 +46,11 @@ namespace iTasks
             {
                 MessageBox.Show("Username ou password incorretos.");
             }
+        }
+
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+
         }
     }
 }

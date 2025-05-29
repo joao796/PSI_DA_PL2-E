@@ -67,6 +67,15 @@
     <Compile Include="Controller\LoginController.cs" />
     <Compile Include="Controller\TarefaController.cs" />
     <Compile Include="Controller\TipoTarefaController.cs" />
+    <Compile Include="Migrations\202505231746559_InitialCreate.cs" />
+    <Compile Include="Migrations\202505231746559_InitialCreate.Designer.cs">
+      <DependentUpon>202505231746559_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202505291421306_Atualizar.cs" />
+    <Compile Include="Migrations\202505291421306_Atualizar.Designer.cs">
+      <DependentUpon>202505291421306_Atualizar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="views\frmConsultarTarefasConcluidas.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -117,6 +126,12 @@
     <Compile Include="models\Utilizador.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Migrations\202505231746559_InitialCreate.resx">
+      <DependentUpon>202505231746559_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202505291421306_Atualizar.resx">
+      <DependentUpon>202505291421306_Atualizar.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="views\frmConsultarTarefasConcluidas.resx">
       <DependentUpon>frmConsultarTarefasConcluidas.cs</DependentUpon>
     </EmbeddedResource>
