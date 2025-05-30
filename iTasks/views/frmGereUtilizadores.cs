@@ -25,6 +25,7 @@ namespace iTasks
             CarregarGestores();
             AtualizarListaGestores();
             AtualizarListaProgramadores();
+            LimparCampos();
         }
 
         private void btGravarGestor_Click(object sender, EventArgs e)
@@ -43,6 +44,7 @@ namespace iTasks
                 MessageBox.Show("Gestor adicionado com sucesso!");
                 AtualizarListaGestores();
                 CarregarGestores();
+                LimparCampos();
             }
             else
             {
@@ -88,6 +90,7 @@ namespace iTasks
             {
                 MessageBox.Show("Programador adicionado com sucesso!");
                 AtualizarListaProgramadores();
+                LimparCampos();
             }
             else
             {
@@ -104,6 +107,25 @@ namespace iTasks
             {
                 lstListaProgramadores.Items.Add($"{p.Nome} ({p.Username}) - Gestor: {p.Gestor?.Username }");
             }
+        }
+
+        private void LimparCampos()
+        {
+            // Gestor
+            txtIdGestor.Text = "";
+            txtNomeGestor.Text = "";
+            txtUsernameGestor.Text = "";
+            txtPasswordGestor.Text = "";
+            chkGereUtilizadores.Checked = false;
+            cbDepartamento.SelectedIndex = -1;
+
+            // Programador
+            txtIdProg.Text = "";
+            txtNomeProg.Text = "";
+            txtUsernameProg.Text = "";
+            txtPasswordProg.Text = "";
+            cbNivelProg.SelectedIndex = -1;
+            cbGestorProg.SelectedIndex = -1;
         }
     }
 }

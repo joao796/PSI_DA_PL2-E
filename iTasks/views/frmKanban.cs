@@ -17,11 +17,11 @@ namespace iTasks
         private KanbanController controller = new KanbanController();
 
         public frmKanban(Utilizador utilizador)
-        { 
-           InitializeComponent();
+        {
+            InitializeComponent();
             label1.Text = "Bem vindo: " + frmLogin.SessaoUtilizador.Username;
-
         }
+
         private void frmKanban_Load(object sender, EventArgs e)
         {
             CarregarTarefasKanban();
@@ -105,6 +105,7 @@ namespace iTasks
                 }
             }
         }
+
         public class TarefaListBoxItem
         {
             public Tarefa Tarefa { get; set; }
@@ -121,7 +122,6 @@ namespace iTasks
                 return Texto;
             }
         }
-
 
         private void btNova_Click(object sender, EventArgs e)
         {
@@ -185,34 +185,26 @@ namespace iTasks
 
         private void btSetDoing_Click(object sender, EventArgs e)
         {
-            
-                if (lstTodo.SelectedItem == null)
-                {
-                    MessageBox.Show("Selecione uma tarefa.");
-                    return;
-                }
+            if (lstTodo.SelectedItem == null)
+            {
+                MessageBox.Show("Selecione uma tarefa.");
+                return;
+            }
 
-                var itemSelecionado = (TarefaListBoxItem)lstTodo.SelectedItem;
-                var tarefaSelecionada = itemSelecionado.Tarefa;
-                var controller = new KanbanController();
+            var itemSelecionado = (TarefaListBoxItem)lstTodo.SelectedItem;
+            var tarefaSelecionada = itemSelecionado.Tarefa;
 
-                bool sucesso = controller.MudarEstadoParaDoing(tarefaSelecionada.Id);
+            string mensagem;
+            bool sucesso = controller.MudarEstadoParaDoing(tarefaSelecionada.Id, out mensagem);
 
             if (sucesso)
-                {
-                    // Atualiza o estado local
-                    tarefaSelecionada.EstadoAtual = EstadoAtual.Doing;
-
-                    // Atualiza visualmente as listas
-                    lstTodo.Items.Remove(itemSelecionado);
-                    var novoItem = new TarefaListBoxItem(tarefaSelecionada, tarefaSelecionada.ToString());
-                    lstDoing.Items.Add(novoItem);
-                }
-                else
-                {
-                    MessageBox.Show("Erro ao atualizar a tarefa.");
-                }
-            
+            {
+                CarregarTarefasKanban();
+            }
+            else
+            {
+                MessageBox.Show(mensagem ?? "Erro ao atualizar a tarefa.");
+            }
         }
 
         private void btSetTodo_Click(object sender, EventArgs e)
@@ -225,23 +217,17 @@ namespace iTasks
 
             var itemSelecionado = (TarefaListBoxItem)lstDoing.SelectedItem;
             var tarefaSelecionada = itemSelecionado.Tarefa;
-            var controller = new KanbanController();
 
-            bool sucesso = controller.MudarEstadoParaToDo(tarefaSelecionada.Id);
+            string mensagem;
+            bool sucesso = controller.MudarEstadoParaToDo(tarefaSelecionada.Id, out mensagem);
 
             if (sucesso)
             {
-                // Atualiza o estado local
-                tarefaSelecionada.EstadoAtual = EstadoAtual.ToDo;
-
-                // Atualiza visualmente as listas
-                lstDoing.Items.Remove(itemSelecionado);
-                var novoItem = new TarefaListBoxItem(tarefaSelecionada, tarefaSelecionada.ToString());
-                lstTodo.Items.Add(novoItem);
+                CarregarTarefasKanban();
             }
             else
             {
-                MessageBox.Show("Erro ao atualizar a tarefa.");
+                MessageBox.Show(mensagem ?? "Erro ao mover a tarefa para 'ToDo'.");
             }
         }
 
@@ -255,23 +241,17 @@ namespace iTasks
 
             var itemSelecionado = (TarefaListBoxItem)lstDoing.SelectedItem;
             var tarefaSelecionada = itemSelecionado.Tarefa;
-            var controller = new KanbanController();
 
-            bool sucesso = controller.MudarEstadoParaDone(tarefaSelecionada.Id);
+            string mensagem;
+            bool sucesso = controller.MudarEstadoParaDone(tarefaSelecionada.Id, out mensagem);
 
             if (sucesso)
             {
-                // Atualiza o estado local
-                tarefaSelecionada.EstadoAtual = EstadoAtual.Done;
-
-                // Atualiza visualmente as listas
-                lstDoing.Items.Remove(itemSelecionado);
-                var novoItem = new TarefaListBoxItem(tarefaSelecionada, tarefaSelecionada.ToString());
-                lstDone.Items.Add(novoItem);
+                CarregarTarefasKanban();
             }
             else
             {
-                MessageBox.Show("Erro ao atualizar a tarefa.");
+                MessageBox.Show(mensagem ?? "Erro ao mover a tarefa para 'Done'.");
             }
         }
     }

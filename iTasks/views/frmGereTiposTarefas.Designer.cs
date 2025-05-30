@@ -94,7 +94,7 @@
             // 
             // btGravar
             // 
-            this.btGravar.Location = new System.Drawing.Point(506, 95);
+            this.btGravar.Location = new System.Drawing.Point(359, 97);
             this.btGravar.Name = "btGravar";
             this.btGravar.Size = new System.Drawing.Size(139, 23);
             this.btGravar.TabIndex = 31;
@@ -104,20 +104,20 @@
             // 
             // btApagar
             // 
-            this.btApagar.Location = new System.Drawing.Point(359, 95);
+            this.btApagar.Location = new System.Drawing.Point(504, 97);
             this.btApagar.Name = "btApagar";
             this.btApagar.Size = new System.Drawing.Size(141, 23);
             this.btApagar.TabIndex = 32;
             this.btApagar.Text = "Apagar";
             this.btApagar.UseVisualStyleBackColor = true;
             this.btApagar.Click += new System.EventHandler(this.btApagar_Click);
-            this.Controls.Add(this.btApagar);
             // 
             // frmGereTiposTarefas
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(664, 404);
+            this.Controls.Add(this.btApagar);
             this.Controls.Add(this.btGravar);
             this.Controls.Add(this.txtDesc);
             this.Controls.Add(this.label4);

@@ -22,6 +22,7 @@ namespace iTasks
         {
             InitializeComponent();
             AtualizarLista();
+            LimparCampos();
         }
 
         private void AtualizarLista()
