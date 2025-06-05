@@ -66,25 +66,18 @@ namespace iTasks
 
             string username = frmLogin.SessaoUtilizador.Username;
             List<Tarefa> tarefas;
-            Utilizador utilizador;
+      
 
             using (var db = new iTaskcontext())
             {
-                utilizador = db.Utilizadores.FirstOrDefault(u => u.Username == username);
-
-                if (utilizador is Programador)
-                {
-                    tarefas = controller.ObterTarefasDoProgramador(username);
-                }
-                else if (utilizador is Gestor)
-                {
-                    tarefas = controller.ObterTarefasDoGestor(username);
-                }
-                else
-                {
-                    tarefas = new List<Tarefa>();
-                }
+                tarefas = db.Tarefas
+             .Include("Programador")
+             .Include("Gestor")
+             .OrderBy(t => t.OrdemExecucao)
+             .ToList();
             }
+
+            var tarefasOrdenadas = tarefas.OrderBy(t => t.OrdemExecucao).ToList();
 
             foreach (var t in tarefas)
             {
@@ -195,7 +188,7 @@ namespace iTasks
             var tarefaSelecionada = itemSelecionado.Tarefa;
 
             string mensagem;
-            bool sucesso = controller.MudarEstadoParaDoing(tarefaSelecionada.Id, out mensagem);
+            bool sucesso = controller.MudarEstadoParaDoing(tarefaSelecionada.Id, frmLogin.SessaoUtilizador.Username, out mensagem);
 
             if (sucesso)
             {
@@ -243,7 +236,9 @@ namespace iTasks
             var tarefaSelecionada = itemSelecionado.Tarefa;
 
             string mensagem;
-            bool sucesso = controller.MudarEstadoParaDone(tarefaSelecionada.Id, out mensagem);
+            string username = frmLogin.SessaoUtilizador.Username;
+            bool sucesso = controller.MudarEstadoParaDone(tarefaSelecionada.Id, username, out mensagem);
+
 
             if (sucesso)
             {
@@ -253,6 +248,11 @@ namespace iTasks
             {
                 MessageBox.Show(mensagem ?? "Erro ao mover a tarefa para 'Done'.");
             }
+        }
+
+        private void btnDetalhes_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

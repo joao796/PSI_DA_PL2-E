@@ -59,7 +59,7 @@ namespace iTasks
 
             foreach (var g in gestores)
             {
-                lstListaGestores.Items.Add($"{g.Nome} ({g.Username}) - {g.Departamento}");
+                lstListaGestores.Items.Add(g.ToString());
             }
         }
 
@@ -105,7 +105,7 @@ namespace iTasks
 
             foreach (var p in programadores)
             {
-                lstListaProgramadores.Items.Add($"{p.Nome} ({p.Username}) - Gestor: {p.Gestor?.Username }");
+                lstListaProgramadores.Items.Add(p.ToString());
             }
         }
 

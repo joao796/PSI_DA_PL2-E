@@ -19,14 +19,19 @@ namespace iTasks
         public Gestor gestorLogado { get; set; }
         public Tarefa tarefaAtual { get; set; }
 
+     
+
         public frmDetalhesTarefa()
         {
             InitializeComponent();
             this.Load += frmDetalhesTarefa_Load;
+            
         }
 
         private void frmDetalhesTarefa_Load(object sender, EventArgs e)
         {
+         
+
             if (gestorLogado == null)
             {
                 MessageBox.Show("Erro: Gestor não foi definido.");
@@ -66,6 +71,7 @@ namespace iTasks
                 // Nova tarefa
                 txtEstado.Text = EstadoAtual.ToDo.ToString();
                 txtDataCriacao.Text = DateTime.Now.ToShortDateString();
+                txtId.Text = gestorLogado.Id.ToString();
             }
         }
 
@@ -116,6 +122,11 @@ namespace iTasks
         private void btFechar_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void txtId_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

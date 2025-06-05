@@ -21,7 +21,7 @@ namespace iTasks
                 db.Gestores.Add(gestor);
                 db.SaveChanges();
             }
-           */ 
+          */
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new frmLogin());

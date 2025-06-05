@@ -39,14 +39,15 @@ namespace iTasks.models
 
         public override string ToString()
         {
-            return $"#{Id} - {Descricao}";
+
+            return $"#{OrdemExecucao} - {Descricao}  {DataPrevistaFim}";
         }
         public string ToStringPara(string username)
         {
             if (Programador != null && Programador.Username != username)
-                return $"#{Id} - {Descricao} ({Programador.Nome})";
+                return $"[⚠] #{OrdemExecucao} - {Descricao} ({Programador.Username}) - {DataPrevistaFim:dd/MM/yyyy}";
             else
-                return $"#{Id} - {Descricao}";
+                return $"#{OrdemExecucao} - {Descricao}  {DataPrevistaFim}";
         }
 
     }

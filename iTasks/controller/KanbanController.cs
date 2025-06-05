@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace iTasks.Controller
 {
@@ -76,7 +77,7 @@ namespace iTasks.Controller
             }
         }
 
-        public bool MudarEstadoParaDoing(int tarefaId, out string mensagemErro)
+        public bool MudarEstadoParaDoing(int tarefaId, string username, out string mensagemErro)
         {
             using (var context = new iTaskcontext())
             {
@@ -87,7 +88,32 @@ namespace iTasks.Controller
                     return false;
                 }
 
-                // Regra: no máximo 2 tarefas Doing por programador
+                // Verifica se o utilizador atual é o programador responsável pela tarefa
+                if (tarefa.Programador == null || tarefa.Programador.Username != username)
+                {
+                    mensagemErro = "Apenas o programador responsável pode mover esta tarefa.";
+                    return false;
+                }
+
+                // Verifica a ordem de execução (deve ser a primeira tarefa do programador em ToDo)
+                var proximaTarefa = context.Tarefas
+                    .Where(t => t.ProgramadorId == tarefa.ProgramadorId && t.EstadoAtual == EstadoAtual.ToDo)
+                    .OrderBy(t => t.OrdemExecucao)
+                    .FirstOrDefault();
+
+                if (proximaTarefa == null)
+                {
+                    mensagemErro = "Não existem tarefas pendentes para este programador.";
+                    return false;
+                }
+
+                if (proximaTarefa.Id != tarefa.Id)
+                {
+                    mensagemErro = "Deve executar as tarefas pela ordem definida pelo gestor.";
+                    return false;
+                }
+
+                // Verifica o limite de tarefas Doing
                 int doingCount = context.Tarefas.Count(t => t.ProgramadorId == tarefa.ProgramadorId && t.EstadoAtual == EstadoAtual.Doing);
                 if (doingCount >= 2)
                 {
@@ -95,6 +121,7 @@ namespace iTasks.Controller
                     return false;
                 }
 
+                // Atualiza estado
                 tarefa.EstadoAtual = EstadoAtual.Doing;
                 if (tarefa.DataRealInicio == null)
                     tarefa.DataRealInicio = DateTime.Now;
@@ -123,14 +150,38 @@ namespace iTasks.Controller
             }
         }
 
-        public bool MudarEstadoParaDone(int tarefaId, out string mensagemErro)
+        public bool MudarEstadoParaDone(int tarefaId, string username, out string mensagemErro)
         {
             using (var context = new iTaskcontext())
             {
-                var tarefa = context.Tarefas.FirstOrDefault(t => t.Id == tarefaId);
+                var tarefa = context.Tarefas
+                    .Include("Programador")
+                    .FirstOrDefault(t => t.Id == tarefaId);
+
                 if (tarefa == null)
                 {
                     mensagemErro = "Tarefa não encontrada.";
+                    return false;
+                }
+
+                // Confirma se a tarefa pertence ao utilizador
+                if (tarefa.Programador == null || tarefa.Programador.Username != username)
+                {
+                    mensagemErro = "Apenas o programador responsável pode mover esta tarefa.";
+                    return false;
+                }
+
+                // Confirma se é a próxima tarefa na ordem
+                var tarefasDoing = context.Tarefas
+                    .Where(t => t.ProgramadorId == tarefa.ProgramadorId && t.EstadoAtual == EstadoAtual.Doing)
+                    .OrderBy(t => t.OrdemExecucao)
+                    .ToList();
+
+                var proximaDoing = tarefasDoing.FirstOrDefault();
+
+                if (proximaDoing == null || proximaDoing.Id != tarefa.Id)
+                {
+                    mensagemErro = "Só pode concluir a tarefa que está primeiro na sua lista.";
                     return false;
                 }
 
