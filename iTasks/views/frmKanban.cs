@@ -25,6 +25,14 @@ namespace iTasks
         private void frmKanban_Load(object sender, EventArgs e)
         {
             CarregarTarefasKanban();
+            if (controller.PodeCriarTarefa(frmLogin.SessaoUtilizador.Username))
+            {
+                btNova.Visible = true;
+            }
+            if (controller.PodeGerirUtilizadores(frmLogin.SessaoUtilizador.Username))
+            {
+                utilizadoresToolStripMenuItem.Visible = true;
+            }
         }
 
         private void sairToolStripMenuItem_Click(object sender, EventArgs e)
@@ -41,7 +49,9 @@ namespace iTasks
             }
             else
             {
-                MessageBox.Show("Não tem permissões entrar aqui");
+
+           
+
             }
         }
 
@@ -54,7 +64,8 @@ namespace iTasks
             }
             else
             {
-                MessageBox.Show("Não tem permissões entrar aqui");
+                
+               
             }
         }
 
@@ -139,7 +150,7 @@ namespace iTasks
             }
             else
             {
-                MessageBox.Show("Não tem permissões para criar tarefas.");
+           
             }
         }
 
@@ -196,7 +207,7 @@ namespace iTasks
             }
             else
             {
-                MessageBox.Show(mensagem ?? "Erro ao atualizar a tarefa.");
+                MessageBox.Show("ERRO - Tem uma tarefa com mais prioriade do que esta ou ja tem 2 tarefas no doing");
             }
         }
 
@@ -212,7 +223,8 @@ namespace iTasks
             var tarefaSelecionada = itemSelecionado.Tarefa;
 
             string mensagem;
-            bool sucesso = controller.MudarEstadoParaToDo(tarefaSelecionada.Id, out mensagem);
+            string username = frmLogin.SessaoUtilizador.Username;
+            bool sucesso = controller.MudarEstadoParaToDo(tarefaSelecionada.Id, username ,  out mensagem);
 
             if (sucesso)
             {
@@ -220,7 +232,7 @@ namespace iTasks
             }
             else
             {
-                MessageBox.Show(mensagem ?? "Erro ao mover a tarefa para 'ToDo'.");
+                MessageBox.Show("ERRO");
             }
         }
 
@@ -246,13 +258,27 @@ namespace iTasks
             }
             else
             {
-                MessageBox.Show(mensagem ?? "Erro ao mover a tarefa para 'Done'.");
+                MessageBox.Show(  "ERRO - Tem que terminar primeiro a tarefa com maior prioridade.");
             }
         }
 
         private void btnDetalhes_Click(object sender, EventArgs e)
         {
+           
+                using (var db = new iTaskcontext())
+                {
+                        frmDetalhesTarefa formDetalhesTarefa = new frmDetalhesTarefa();
+                        formDetalhesTarefa.SetReadOnlyMode(true);
+                        formDetalhesTarefa.ShowDialog();
+                       
+                        CarregarTarefasKanban();
+                }
+            }
 
+        private void tarefasTerminadasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmConsultarTarefasConcluidas tarefasConcluidas = new frmConsultarTarefasConcluidas();
+            tarefasConcluidas.ShowDialog();
         }
     }
 }

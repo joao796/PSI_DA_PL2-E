@@ -132,14 +132,21 @@ namespace iTasks.Controller
             }
         }
 
-        public bool MudarEstadoParaToDo(int tarefaId, out string mensagemErro)
+        public bool MudarEstadoParaToDo(int tarefaId, string username, out string mensagemErro)
         {
             using (var context = new iTaskcontext())
             {
-                var tarefa = context.Tarefas.FirstOrDefault(t => t.Id == tarefaId);
+                var tarefa = context.Tarefas
+                  .Include("Programador")
+                  .FirstOrDefault(t => t.Id == tarefaId);
                 if (tarefa == null)
                 {
                     mensagemErro = "Tarefa não encontrada.";
+                    return false;
+                }
+                if (tarefa.Programador == null || tarefa.Programador.Username != username)
+                {
+                    mensagemErro = "Apenas o programador responsável pode mover esta tarefa.";
                     return false;
                 }
 
@@ -189,6 +196,7 @@ namespace iTasks.Controller
                 if (tarefa.DataRealFim == null)
                     tarefa.DataRealFim = DateTime.Now;
                 tarefa.OrdemExecucao = 0;
+            
 
                 context.SaveChanges();
                 mensagemErro = null;

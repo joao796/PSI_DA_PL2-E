@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.Remoting.Contexts;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,7 +11,7 @@ namespace iTasks.Controller
 {
     class GereUtilizadoresController
     {
-        
+
 
         public bool AdicionarGestor(Gestor gestor)
         {
@@ -65,6 +66,45 @@ namespace iTasks.Controller
             {
 
                 return context.Programadores.Include("Gestor").ToList();
+            }
+        }
+        public bool ApagarGestor(Gestor gestor)
+        {
+            using (var context = new iTaskcontext())
+            {
+                // Verifica se o gestor está em uso (ex: associado a programadores)
+                bool emUso = context.Programadores.Any(p => p.Gestor.Id == gestor.Id);
+                if (emUso)
+                    return false;
+
+                var gestorDb = context.Gestores.FirstOrDefault(g => g.Username == gestor.Username);
+                if (gestorDb == null)
+                    return false;
+          
+                context.Gestores.Remove(gestorDb);
+                context.SaveChanges();
+                return true;
+            }
+        }
+        public bool ApagarProgramador(Programador programador)
+        {
+            using (var context = new iTaskcontext())
+            {
+                var programadorDb = context.Programadores.FirstOrDefault(p => p.Username == programador.Username);
+                if (programadorDb == null)
+                    return false;
+                try { 
+                context.Programadores.Remove(programadorDb);
+                context.SaveChanges();
+                return true;
+                }
+                catch (Exception ex)
+                {
+                    
+                    string message = $"Este programador tem uma tarefa associada {ex.Message}";
+                  
+                    return false;
+                }
             }
         }
     }

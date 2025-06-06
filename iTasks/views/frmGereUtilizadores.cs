@@ -127,6 +127,77 @@ namespace iTasks
             cbNivelProg.SelectedIndex = -1;
             cbGestorProg.SelectedIndex = -1;
         }
+
+        private void btnEliminarGestor_Click(object sender, EventArgs e)
+        {
+            if (lstListaGestores.SelectedItem == null)
+            {
+                MessageBox.Show("Selecione um gestor para apagar.");
+                return;
+            }
+
+
+            string nomeGestorSelecionado = lstListaGestores.SelectedItem.ToString();
+
+
+            var gestorSelecionado = controller
+                .ListarGestores()
+                .FirstOrDefault(p => p.ToString() == nomeGestorSelecionado);
+
+            bool sucesso = controller.ApagarGestor(gestorSelecionado);
+
+            if (sucesso)
+            {
+                MessageBox.Show("Gestor apagado com sucesso.");
+                AtualizarListaProgramadores();
+                LimparCampos();
+            }
+            else
+            {
+                MessageBox.Show("Este gestor tem programadores associados.");
+            }
+
+        
+
+
+            CarregarGestores();
+            AtualizarListaGestores();
+            LimparCampos();
+        }
+
+        private void btnEliminarProgramador_Click(object sender, EventArgs e)
+        {
+            if (lstListaProgramadores.SelectedItem == null)
+            {
+                MessageBox.Show("Selecione um programador para apagar.");
+                return;
+            }
+
+            string nomeProgramadorSelecionado = lstListaProgramadores.SelectedItem.ToString();
+
+            var programadorSelecionado = controller
+                .ListarProgramadores()
+                .FirstOrDefault(p => p.ToString() == nomeProgramadorSelecionado);
+
+            if (programadorSelecionado == null)
+            {
+                MessageBox.Show("Erro: Programador não encontrado.");
+                return;
+            }
+
+            bool sucesso = controller.ApagarProgramador(programadorSelecionado);
+
+            if (sucesso)
+            {
+                MessageBox.Show("Programador apagado com sucesso.");
+                AtualizarListaProgramadores();
+                LimparCampos();
+            }
+            else
+            {
+                MessageBox.Show("Este programador tem tarefas associadas.");
+            }
+        }
     }
 }
 

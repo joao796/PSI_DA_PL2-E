@@ -18,26 +18,22 @@ namespace iTasks
 
         public Gestor gestorLogado { get; set; }
         public Tarefa tarefaAtual { get; set; }
+  
 
-     
 
         public frmDetalhesTarefa()
         {
             InitializeComponent();
             this.Load += frmDetalhesTarefa_Load;
-            
+
+         
         }
 
         private void frmDetalhesTarefa_Load(object sender, EventArgs e)
         {
          
 
-            if (gestorLogado == null)
-            {
-                MessageBox.Show("Erro: Gestor não foi definido.");
-                this.Close();
-                return;
-            }
+            
 
             // Carregar no combobox os tipos de tarefa
             cbTipoTarefa.DataSource = controller.ObterTiposTarefa();
@@ -128,5 +124,18 @@ namespace iTasks
         {
 
         }
+
+        public void SetReadOnlyMode(bool readOnly)
+        {
+            txtDesc.ReadOnly = readOnly;
+            cbTipoTarefa.Enabled = readOnly;
+            cbProgramador.Enabled = !readOnly;
+            txtOrdem.ReadOnly = !readOnly;
+            txtStoryPoints.ReadOnly = !readOnly;
+            dtInicio.Enabled = !readOnly;
+            dtFim.Enabled = !readOnly;
+            btGravar.Visible = !readOnly; 
+        }
+
     }
 }
