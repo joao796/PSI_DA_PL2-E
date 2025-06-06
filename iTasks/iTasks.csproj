@@ -66,6 +66,7 @@
     <Compile Include="Controller\KanbanController.cs" />
     <Compile Include="Controller\LoginController.cs" />
     <Compile Include="Controller\TarefaController.cs" />
+    <Compile Include="Controller\TarefasConcluidasController.cs" />
     <Compile Include="Controller\TipoTarefaController.cs" />
     <Compile Include="views\frmConsultarTarefasConcluidas.cs">
       <SubType>Form</SubType>
