@@ -31,23 +31,20 @@ namespace iTasks
 
         private void frmDetalhesTarefa_Load(object sender, EventArgs e)
         {
-         
-
-            
-
-            // Carregar no combobox os tipos de tarefa
             cbTipoTarefa.DataSource = controller.ObterTiposTarefa();
             cbTipoTarefa.DisplayMember = "Nome";
             cbTipoTarefa.ValueMember = "Id";
 
-            // Carregar no combobox os programadores associados ao gestor
-            cbProgramador.DataSource = controller.ObterProgramadoresDoGestor(gestorLogado.Id);
-            cbProgramador.DisplayMember = "Nome";
-            cbProgramador.ValueMember = "Id";
+            if (gestorLogado != null)
+            {
+                cbProgramador.DataSource = controller.ObterProgramadoresDoGestor(gestorLogado.Id);
+                cbProgramador.DisplayMember = "Nome";
+                cbProgramador.ValueMember = "Id";
+            }
 
             if (tarefaAtual != null)
             {
-                // Edição
+                // 1º para editar / 2º para visualização
                 txtId.Text = tarefaAtual.Id.ToString();
                 txtDesc.Text = tarefaAtual.Descricao;
                 txtOrdem.Text = tarefaAtual.OrdemExecucao.ToString();
@@ -64,12 +61,11 @@ namespace iTasks
             }
             else
             {
-                // Nova tarefa
                 txtEstado.Text = EstadoAtual.ToDo.ToString();
                 txtDataCriacao.Text = DateTime.Now.ToShortDateString();
-                txtId.Text = gestorLogado.Id.ToString();
             }
         }
+
 
         private void btGravar_Click(object sender, EventArgs e)
         {
@@ -128,13 +124,13 @@ namespace iTasks
         public void SetReadOnlyMode(bool readOnly)
         {
             txtDesc.ReadOnly = readOnly;
-            cbTipoTarefa.Enabled = readOnly;
+            cbTipoTarefa.Enabled = !readOnly;
             cbProgramador.Enabled = !readOnly;
-            txtOrdem.ReadOnly = !readOnly;
-            txtStoryPoints.ReadOnly = !readOnly;
+            txtOrdem.ReadOnly = readOnly;
+            txtStoryPoints.ReadOnly = readOnly;
             dtInicio.Enabled = !readOnly;
             dtFim.Enabled = !readOnly;
-            btGravar.Visible = !readOnly; 
+            btGravar.Visible = !readOnly;
         }
 
     }

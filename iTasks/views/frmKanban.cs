@@ -268,16 +268,44 @@ namespace iTasks
 
         private void btnDetalhes_Click(object sender, EventArgs e)
         {
-           
-                using (var db = new iTaskcontext())
+            ListBox[] listas = { lstTodo, lstDoing, lstDone };
+            TarefaListBoxItem itemSelecionado = null;
+
+            foreach (var lista in listas)
+            {
+                if (lista.SelectedItem is TarefaListBoxItem item)
                 {
-                        frmDetalhesTarefa formDetalhesTarefa = new frmDetalhesTarefa();
-                        formDetalhesTarefa.SetReadOnlyMode(true);
-                        formDetalhesTarefa.ShowDialog();
-                       
-                        CarregarTarefasKanban();
+                    itemSelecionado = item;
+                    break;
                 }
             }
+
+            if (itemSelecionado == null)
+            {
+                MessageBox.Show("Selecione uma tarefa.");
+                return;
+            }
+
+            using (var db = new iTaskcontext())
+            {
+                var tarefa = db.Tarefas
+                    .Include("Programador")
+                    .Include("TipoTarefa")
+                    .FirstOrDefault(t => t.Id == itemSelecionado.Tarefa.Id);
+
+                if (tarefa == null)
+                {
+                    MessageBox.Show("Tarefa não encontrada.");
+                    return;
+                }
+
+                var form = new frmDetalhesTarefa();
+                form.tarefaAtual = tarefa;
+                form.SetReadOnlyMode(true);
+                form.ShowDialog();
+            }
+        }
+
 
         private void tarefasTerminadasToolStripMenuItem_Click(object sender, EventArgs e)
         {
