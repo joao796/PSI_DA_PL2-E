@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
+using System.Text;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace iTasks.Controller
@@ -196,12 +198,50 @@ namespace iTasks.Controller
                 if (tarefa.DataRealFim == null)
                     tarefa.DataRealFim = DateTime.Now;
                 tarefa.OrdemExecucao = 0;
-            
+
 
                 context.SaveChanges();
                 mensagemErro = null;
                 return true;
             }
         }
+        public void ExportarTarefasConcluidasParaCSV(string usernameGestor)
+        {
+            using (var context = new iTaskcontext())
+            {
+                var tarefas = context.Tarefas
+                    .Include("Programador")
+                    .Include("TipoTarefa")
+                    .Include("Gestor")
+                    .Where(t => t.EstadoAtual == EstadoAtual.Done && t.Gestor.Username == usernameGestor)
+                    .ToList();
+
+                // Definir diretoria e ficheiro
+                string pasta = (@"C:\Users\joaoo\Desktop\PSI_DA_PL2-E");
+                
+                DirectoryInfo dirInfo = new DirectoryInfo(pasta);
+                if (!dirInfo.Exists) dirInfo.Create();
+
+                string nomeFicheiro = $"tarefas_concluidas_{usernameGestor}.csv";
+                string caminho = Path.Combine(pasta, nomeFicheiro);
+
+                
+                using (FileStream fs = new FileStream(caminho, FileMode.Create, FileAccess.Write))
+                using (StreamWriter sw = new StreamWriter(fs))
+                {
+                    sw.WriteLine("Programador;Descricao;DataPrevistaInicio;DataPrevistaFim;TipoTarefa;DataRealInicio;DataRealFim");
+
+                    foreach (var t in tarefas)
+                    {
+                        string linha = $"{t.Programador?.Username};{t.Descricao};" +
+                                       $"{t.DataPrevistaInicio:yyyy-MM-dd};{t.DataPrevistaFim:yyyy-MM-dd};" +
+                                       $"{t.TipoTarefa?.Nome};{t.DataRealInicio:yyyy-MM-dd};{t.DataRealFim:yyyy-MM-dd}";
+                        sw.WriteLine(linha);
+                    }
+                }
+            }
+        }
     }
 }
+        
+

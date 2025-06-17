@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace iTasks.Controller
 {
     class TarefasConcluidasController
@@ -20,6 +21,35 @@ namespace iTasks.Controller
             }
         }
 
+
+        public List<Tarefa> ObterTarefasConcluidasDoProgramador(string username)
+        {
+            using (var context = new iTaskcontext())
+            {
+                return context.Tarefas
+                    .Where(t => t.EstadoAtual == EstadoAtual.Done
+                                && t.Programador.Username == username
+                                && t.DataRealInicio.HasValue
+                                && t.DataRealFim.HasValue)
+                    .ToList();
+            }
+        }
+
+            public List<Tarefa> ObterTarefasConcluidasDoGestor(string username)
+            {
+                using (var context = new iTaskcontext())
+                {
+                    return context.Tarefas
+                        .Include("Programador")
+                        .Where(t => t.EstadoAtual == EstadoAtual.Done
+                                    && t.Gestor.Username == username
+                                    && t.DataRealInicio.HasValue
+                                    && t.DataRealFim.HasValue
+                                   )
+
+                        .ToList();
+                }
+            }
 
     }
 }

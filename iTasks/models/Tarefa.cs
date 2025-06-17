@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using iTasks.models;
 
 
@@ -49,8 +50,20 @@ namespace iTasks.models
             else
                 return $"#{OrdemExecucao} - {Descricao}  {DataPrevistaFim}";
         }
-
+        public int CalcularDiasParaConclusao()
+        {
+            if (EstadoAtual == EstadoAtual.Done && DataRealInicio.HasValue && DataRealFim.HasValue)
+            {
+                return (DataRealFim.Value - DataRealInicio.Value).Days;
+            }
+            else
+            {
+                MessageBox.Show("Não é possível calcular o tempo de conclusão: tarefa incompleta ou datas ausentes.");
+                return 0;
+            }
+        }
     }
+
     public enum EstadoAtual
     {
        ToDo,

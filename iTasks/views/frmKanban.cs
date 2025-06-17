@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +29,9 @@ namespace iTasks
             if (controller.PodeCriarTarefa(frmLogin.SessaoUtilizador.Username))
             {
                 btNova.Visible = true;
+                tarefasEmCursoToolStripMenuItem.Visible = true;
+                btnDetalhes.Visible = false;
+                exportarParaCSVToolStripMenuItem.Visible = true;
             }
             if (controller.PodeGerirUtilizadores(frmLogin.SessaoUtilizador.Username))
             {
@@ -279,6 +283,16 @@ namespace iTasks
         {
             frmConsultarTarefasConcluidas tarefasConcluidas = new frmConsultarTarefasConcluidas();
             tarefasConcluidas.ShowDialog();
+        }
+
+        private void exportarParaCSVToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var controller = new KanbanController();
+            string usernameGestor = frmLogin.SessaoUtilizador.Username;
+
+            controller.ExportarTarefasConcluidasParaCSV(usernameGestor);
+
+            MessageBox.Show("Tarefas exportadas com sucesso para C:\\temp!");
         }
     }
 }
