@@ -195,7 +195,13 @@ namespace iTasks
         {
             if (lstTodo.SelectedItem == null)
             {
-                MessageBox.Show("Selecione uma tarefa.");
+                MessageBox.Show("Por favor selecione uma tarefa da lista 'ToDo'.");
+                return;
+            }
+
+            if (!(frmLogin.SessaoUtilizador.Username is Programador))
+            {
+                MessageBox.Show("Apenas programadores podem mover tarefas para 'Doing'.");
                 return;
             }
 
@@ -211,7 +217,7 @@ namespace iTasks
             }
             else
             {
-                MessageBox.Show("ERRO - Tem uma tarefa com mais prioriade do que esta ou ja tem 2 tarefas no doing");
+                MessageBox.Show(mensagem ?? "Não foi possível mover a tarefa para 'Doing'.");
             }
         }
 
@@ -219,7 +225,13 @@ namespace iTasks
         {
             if (lstDoing.SelectedItem == null)
             {
-                MessageBox.Show("Selecione uma tarefa.");
+                MessageBox.Show("Por favor selecione uma tarefa da lista 'Doing'.");
+                return;
+            }
+
+            if (!(frmLogin.SessaoUtilizador.Username is Programador))
+            {
+                MessageBox.Show("Apenas programadores podem mover tarefas para 'ToDo'.");
                 return;
             }
 
@@ -227,8 +239,7 @@ namespace iTasks
             var tarefaSelecionada = itemSelecionado.Tarefa;
 
             string mensagem;
-            string username = frmLogin.SessaoUtilizador.Username;
-            bool sucesso = controller.MudarEstadoParaToDo(tarefaSelecionada.Id, username ,  out mensagem);
+            bool sucesso = controller.MudarEstadoParaToDo(tarefaSelecionada.Id, frmLogin.SessaoUtilizador.Username, out mensagem);
 
             if (sucesso)
             {
@@ -236,7 +247,7 @@ namespace iTasks
             }
             else
             {
-                MessageBox.Show("ERRO");
+                MessageBox.Show(mensagem ?? "Não foi possível mover a tarefa para 'ToDo'.");
             }
         }
 
@@ -244,7 +255,13 @@ namespace iTasks
         {
             if (lstDoing.SelectedItem == null)
             {
-                MessageBox.Show("Selecione uma tarefa.");
+                MessageBox.Show("Por favor selecione uma tarefa da lista 'Doing'.");
+                return;
+            }
+
+            if (!(frmLogin.SessaoUtilizador.Username is Programador))
+            {
+                MessageBox.Show("Apenas programadores podem concluir tarefas.");
                 return;
             }
 
@@ -252,9 +269,7 @@ namespace iTasks
             var tarefaSelecionada = itemSelecionado.Tarefa;
 
             string mensagem;
-            string username = frmLogin.SessaoUtilizador.Username;
-            bool sucesso = controller.MudarEstadoParaDone(tarefaSelecionada.Id, username, out mensagem);
-
+            bool sucesso = controller.MudarEstadoParaDone(tarefaSelecionada.Id, frmLogin.SessaoUtilizador.Username, out mensagem);
 
             if (sucesso)
             {
@@ -262,9 +277,10 @@ namespace iTasks
             }
             else
             {
-                MessageBox.Show(  "ERRO - Tem que terminar primeiro a tarefa com maior prioridade.");
+                MessageBox.Show(mensagem ?? "Não foi possível concluir a tarefa. Pode ter tarefas com prioridade mais alta.");
             }
         }
+
 
         private void btnDetalhes_Click(object sender, EventArgs e)
         {
@@ -321,6 +337,12 @@ namespace iTasks
             controller.ExportarTarefasConcluidasParaCSV(usernameGestor);
 
             MessageBox.Show("Tarefas exportadas com sucesso para C:\\temp!");
+        }
+
+        private void tarefasEmCursoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmConsultaTarefasEmCurso form = new frmConsultaTarefasEmCurso();
+            form.ShowDialog();
         }
     }
 }

@@ -131,7 +131,9 @@ namespace iTasks
             dtInicio.Enabled = !readOnly;
             dtFim.Enabled = !readOnly;
             btGravar.Visible = !readOnly;
-        }
 
+            txtDataRealini.ReadOnly = true;
+            txtdataRealFim.ReadOnly = true;
+        }
     }
 }

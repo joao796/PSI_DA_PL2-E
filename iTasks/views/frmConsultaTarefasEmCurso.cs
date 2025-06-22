@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using iTasks.models;
+
 
 namespace iTasks
 {
@@ -15,11 +17,33 @@ namespace iTasks
         public frmConsultaTarefasEmCurso()
         {
             InitializeComponent();
+            CarregarTarefasEmCurso();
         }
 
+        private void CarregarTarefasEmCurso()
+        {
+            using (var db = new iTaskcontext())
+            {
+                var tarefasDoing = db.Tarefas
+                    .Where(t => t.EstadoAtual == EstadoAtual.Doing)
+                    .Select(t => new
+                    {
+                        t.Id,
+                        t.Descricao,
+                        Programador = t.Programador.Nome,
+                        Tipo = t.TipoTarefa.Nome,
+                        t.OrdemExecucao,
+                        t.DataPrevistaInicio,
+                        t.DataPrevistaFim
+                    })
+                    .ToList();
+
+                gvTarefasEmCurso.DataSource = tarefasDoing;
+            }
+        }
         private void gvTarefasEmCurso_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-
+            
         }
     }
 }
