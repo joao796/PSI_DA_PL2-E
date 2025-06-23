@@ -331,13 +331,27 @@ namespace iTasks
 
         private void exportarParaCSVToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var controller = new KanbanController();
-            string usernameGestor = frmLogin.SessaoUtilizador.Username;
+            using (SaveFileDialog saveDialog = new SaveFileDialog())
+            {
+                saveDialog.Filter = "Ficheiros CSV (*.csv)|*.csv";
+                saveDialog.Title = "Guardar Tarefas Concluídas";
+                saveDialog.FileName = $"tarefas_concluidas_{frmLogin.SessaoUtilizador.Username}.csv";
 
-            controller.ExportarTarefasConcluidasParaCSV(usernameGestor);
+                if (saveDialog.ShowDialog() == DialogResult.OK)
+                {
+                    var controller = new KanbanController();
+                    string usernameGestor = frmLogin.SessaoUtilizador.Username;
 
-            MessageBox.Show("Tarefas exportadas com sucesso para C:\\temp!");
+                    bool sucesso = controller.ExportarTarefasConcluidasParaCSV(usernameGestor, saveDialog.FileName);
+
+                    if (sucesso)
+                        MessageBox.Show("Tarefas exportadas com sucesso!");
+                    else
+                        MessageBox.Show("Erro ao exportar as tarefas.");
+                }
+            }
         }
+
 
         private void tarefasEmCursoToolStripMenuItem_Click(object sender, EventArgs e)
         {
