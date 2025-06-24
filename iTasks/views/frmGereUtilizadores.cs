@@ -39,16 +39,55 @@ namespace iTasks
                 GereUtilizadores = chkGereUtilizadores.Checked
             };
 
-            if (controller.AdicionarGestor(gestor))
+            if (string.IsNullOrWhiteSpace(txtIdGestor.Text))
             {
-                MessageBox.Show("Gestor adicionado com sucesso!");
-                AtualizarListaGestores();
-                CarregarGestores();
-                LimparCampos();
+                // Adicionar novo
+                if (controller.AdicionarGestor(gestor))
+                {
+                    MessageBox.Show("Gestor adicionado com sucesso!");
+                }
+                else
+                {
+                    MessageBox.Show("Erro ao adicionar gestor. Verifique se o username já existe.");
+                    return;
+                }
             }
             else
             {
-                MessageBox.Show("Erro ao adicionar gestor. Verifique se o username já existe.");
+                // Atualizar existente
+                gestor.Id = int.Parse(txtIdGestor.Text);
+                if (controller.AtualizarGestor(gestor))
+                {
+                    MessageBox.Show("Gestor atualizado com sucesso!");
+                }
+                else
+                {
+                    MessageBox.Show("Erro ao atualizar gestor.");
+                    return;
+                }
+            }
+
+            AtualizarListaGestores();
+            CarregarGestores();
+            LimparCampos();
+        }
+
+        private void lstListaGestores_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lstListaGestores.SelectedItem == null)
+                return;
+
+            var gestorSelecionado = controller.ListarGestores()
+                .FirstOrDefault(g => g.ToString() == lstListaGestores.SelectedItem.ToString());
+
+            if (gestorSelecionado != null)
+            {
+                txtIdGestor.Text = gestorSelecionado.Id.ToString();
+                txtNomeGestor.Text = gestorSelecionado.Nome;
+                txtUsernameGestor.Text = gestorSelecionado.Username;
+                txtPasswordGestor.Text = gestorSelecionado.Password;
+                cbDepartamento.SelectedItem = gestorSelecionado.Departamento;
+                chkGereUtilizadores.Checked = gestorSelecionado.GereUtilizadores;
             }
         }
 
@@ -62,9 +101,7 @@ namespace iTasks
                 lstListaGestores.Items.Add(g.ToString());
             }
             int totalGestores = lstListaGestores.Items.Count;
-            
             label12.Text = $"Gestores: {totalGestores}";
-            
         }
 
         private void CarregarGestores()
@@ -78,8 +115,11 @@ namespace iTasks
 
         private void btGravarProg_Click(object sender, EventArgs e)
         {
+            int.TryParse(txtIdProg.Text, out int idExistente);
+
             var programador = new Programador
             {
+                Id = idExistente,
                 Nome = txtNomeProg.Text,
                 Username = txtUsernameProg.Text,
                 Password = txtPasswordProg.Text,
@@ -90,16 +130,57 @@ namespace iTasks
                 }
             };
 
-            if (controller.AdicionarProgramador(programador))
+            bool sucesso;
+
+            if (idExistente > 0)
             {
-                MessageBox.Show("Programador adicionado com sucesso!");
-                AtualizarListaProgramadores();
-                LimparCampos();
+                // Atualizar programador
+                sucesso = controller.AtualizarProgramador(programador);
+                if (sucesso)
+                {
+                    MessageBox.Show("Programador atualizado com sucesso!");
+                }
+                else
+                {
+                    MessageBox.Show("Erro ao atualizar programador.");
+                }
             }
             else
             {
-                MessageBox.Show("Erro ao adicionar programador. Verifique se o username já existe.");
+                // Adicionar programador novo
+                sucesso = controller.AdicionarProgramador(programador);
+                if (sucesso)
+                {
+                    MessageBox.Show("Programador adicionado com sucesso!");
+                }
+                else
+                {
+                    MessageBox.Show("Erro ao adicionar programador. Verifique se o username já existe.");
+                }
             }
+
+            AtualizarListaProgramadores();
+            LimparCampos();
+        }
+        private void lstListaProgramadores_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lstListaProgramadores.SelectedItem == null)
+                return;
+
+            string nomeProgramadorSelecionado = lstListaProgramadores.SelectedItem.ToString();
+
+            var programador = controller.ListarProgramadores()
+                .FirstOrDefault(p => p.ToString() == nomeProgramadorSelecionado);
+
+            if (programador == null)
+                return;
+
+            txtIdProg.Text = programador.Id.ToString();
+            txtNomeProg.Text = programador.Nome;
+            txtUsernameProg.Text = programador.Username;
+            txtPasswordProg.Text = programador.Password;
+            cbNivelProg.SelectedItem = programador.NivelExperiencia;
+            cbGestorProg.SelectedValue = programador.Gestor?.Id ?? -1;
         }
 
         private void AtualizarListaProgramadores()
@@ -112,7 +193,6 @@ namespace iTasks
                 lstListaProgramadores.Items.Add(p.ToString());
             }
             int totalProgramadores = lstListaProgramadores.Items.Count;
-
             label13.Text = $"Programadores: {totalProgramadores}";
         }
 
@@ -207,4 +287,3 @@ namespace iTasks
         }
     }
 }
-

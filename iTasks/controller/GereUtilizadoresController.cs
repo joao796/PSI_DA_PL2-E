@@ -107,5 +107,43 @@ namespace iTasks.Controller
                 }
             }
         }
+
+        public bool AtualizarGestor(Gestor gestor)
+        {
+            using (var context = new iTaskcontext())
+            {
+                var gestorDb = context.Gestores.Find(gestor.Id);
+                if (gestorDb == null)
+                    return false;
+
+                gestorDb.Nome = gestor.Nome;
+                gestorDb.Username = gestor.Username;
+                gestorDb.Password = gestor.Password;
+                gestorDb.Departamento = gestor.Departamento;
+                gestorDb.GereUtilizadores = gestor.GereUtilizadores;
+
+                context.SaveChanges();
+                return true;
+            }
+        }
+
+        public bool AtualizarProgramador(Programador programador)
+        {
+            using (var context = new iTaskcontext())
+            {
+                var programadorDb = context.Programadores.Find(programador.Id);
+                if (programadorDb == null)
+                    return false;
+
+                programadorDb.Nome = programador.Nome;
+                programadorDb.Username = programador.Username;
+                programadorDb.Password = programador.Password;
+                programadorDb.NivelExperiencia = programador.NivelExperiencia;
+                programadorDb.Gestor = context.Gestores.Find(programador.Gestor.Id);
+
+                context.SaveChanges();
+                return true;
+            }
+        }
     }
 }
