@@ -241,6 +241,65 @@ namespace iTasks.Controller
                 return false;
             }
         }
+
+        public bool EhProgramador(string username)
+        {
+            using (var context = new iTaskcontext())
+            {
+                return context.Programadores.Any(p => p.Username == username);
+            }
+        }
+        private Dictionary<int, double> ObterMediaTempoPorStoryPoints()
+        {
+            using (var context = new iTaskcontext())
+            {
+                var tarefasConcluidas = context.Tarefas
+                    .Where(t => t.EstadoAtual == EstadoAtual.Done)
+                    .ToList();
+
+                // Agrupa por StoryPoints e calcula a média do tempo gasto
+                var mediaPorSP = tarefasConcluidas
+                    .GroupBy(t => t.StoryPoints)
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.Average(t => (t.DataRealFim - t.DataRealInicio).Value.TotalHours)
+                    );
+
+                return mediaPorSP;
+            }
+        }
+
+        // Retorna o tempo estimado para o SP dado, ou o SP mais próximo se não existir
+        private double ObterTempoEstimadoPorSP(int storyPoints, Dictionary<int, double> mediaPorSP)
+        {
+            if (mediaPorSP == null || mediaPorSP.Count == 0)
+                return 0;
+
+            if (mediaPorSP.ContainsKey(storyPoints))
+                return mediaPorSP[storyPoints];
+
+            // Busca o SP mais próximo
+            int spMaisProximo = mediaPorSP.Keys
+                .OrderBy(sp => Math.Abs(sp - storyPoints))
+                .First();
+
+            return mediaPorSP[spMaisProximo];
+        }
+
+        // Método público para obter o tempo estimado para uma tarefa pelo ID
+        public double ObterEstimativaTempoTarefa(int tarefaId)
+        {
+            using (var context = new iTaskcontext())
+            {
+                var tarefa = context.Tarefas.FirstOrDefault(t => t.Id == tarefaId);
+                if (tarefa == null)
+                    return 0;
+
+                var mediaPorSP = ObterMediaTempoPorStoryPoints();
+
+                return ObterTempoEstimadoPorSP(tarefa.StoryPoints, mediaPorSP);
+            }
+        }
     }
 }
         

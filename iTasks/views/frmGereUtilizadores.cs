@@ -61,6 +61,10 @@ namespace iTasks
             {
                 lstListaGestores.Items.Add(g.ToString());
             }
+            int totalGestores = lstListaGestores.Items.Count;
+            
+            label12.Text = $"Gestores: {totalGestores}";
+            
         }
 
         private void CarregarGestores()
@@ -107,6 +111,9 @@ namespace iTasks
             {
                 lstListaProgramadores.Items.Add(p.ToString());
             }
+            int totalProgramadores = lstListaProgramadores.Items.Count;
+
+            label13.Text = $"Programadores: {totalProgramadores}";
         }
 
         private void LimparCampos()

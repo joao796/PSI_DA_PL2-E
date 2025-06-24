@@ -32,6 +32,7 @@ namespace iTasks
                 tarefasEmCursoToolStripMenuItem.Visible = true;
                 btnDetalhes.Visible = false;
                 exportarParaCSVToolStripMenuItem.Visible = true;
+                btPrevisao.Visible = true;
             }
             if (controller.PodeGerirUtilizadores(frmLogin.SessaoUtilizador.Username))
             {
@@ -112,6 +113,12 @@ namespace iTasks
                         break;
                 }
             }
+            int totalTarefasToDo = lstTodo.Items.Count;
+            int totalTarefasDoing = lstDoing.Items.Count;
+            int totalTarefasDone = lstDone.Items.Count;
+            label2.Text = $"Tarefas ToDo: {totalTarefasToDo}";
+            label3.Text = $"Tarefas Doing: {totalTarefasDoing}";
+            label4.Text = $"Tarefas Done: {totalTarefasDone}";            
         }
 
         public class TarefaListBoxItem
@@ -199,9 +206,9 @@ namespace iTasks
                 return;
             }
 
-            if (!(frmLogin.SessaoUtilizador.Username is Programador))
+            if (!controller.EhProgramador(frmLogin.SessaoUtilizador.Username))
             {
-                MessageBox.Show("Apenas programadores podem mover tarefas para 'Doing'.");
+                MessageBox.Show("Apenas programadores podem mover tarefas.");
                 return;
             }
 
@@ -229,12 +236,11 @@ namespace iTasks
                 return;
             }
 
-            if (!(frmLogin.SessaoUtilizador.Username is Programador))
+            if (!controller.EhProgramador(frmLogin.SessaoUtilizador.Username))
             {
-                MessageBox.Show("Apenas programadores podem mover tarefas para 'ToDo'.");
+                MessageBox.Show("Apenas programadores podem mover tarefas.");
                 return;
             }
-
             var itemSelecionado = (TarefaListBoxItem)lstDoing.SelectedItem;
             var tarefaSelecionada = itemSelecionado.Tarefa;
 
@@ -259,9 +265,9 @@ namespace iTasks
                 return;
             }
 
-            if (!(frmLogin.SessaoUtilizador.Username is Programador))
+            if (!controller.EhProgramador(frmLogin.SessaoUtilizador.Username))
             {
-                MessageBox.Show("Apenas programadores podem concluir tarefas.");
+                MessageBox.Show("Apenas programadores podem mover tarefas.");
                 return;
             }
 
@@ -357,6 +363,21 @@ namespace iTasks
         {
             frmConsultaTarefasEmCurso form = new frmConsultaTarefasEmCurso();
             form.ShowDialog();
+        }
+
+        private void btPrevisao_Click(object sender, EventArgs e)
+        {
+            var itemSelecionado = (TarefaListBoxItem)lstTodo.SelectedItem; // ou da lista que usar
+            if (itemSelecionado == null)
+            {
+                lbl_Previsao.Text = "Selecione uma tarefa.";
+                lbl_Previsao.Visible = true;
+                return;
+            }
+
+            double estimativa = controller.ObterEstimativaTempoTarefa(itemSelecionado.Tarefa.Id);
+            lbl_Previsao.Text = $"Tempo estimado: {estimativa:F1} horas";
+            lbl_Previsao.Visible = true;
         }
     }
 }
