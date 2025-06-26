@@ -1,5 +1,6 @@
 ﻿using iTasks.Controller;
 using iTasks.models;
+using iTasks.views;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -378,6 +379,34 @@ namespace iTasks
             double estimativa = controller.ObterEstimativaTempoTarefa(itemSelecionado.Tarefa.Id);
             lbl_Previsao.Text = $"Tempo estimado: {estimativa:F1} horas";
             lbl_Previsao.Visible = true;
+        }
+
+        private void tarefaDoGestorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmTarefaGestor form = new frmTarefaGestor();
+            form.ShowDialog();
+
+            if (controller.PodeCriarTarefa(frmLogin.SessaoUtilizador.Username))
+            {
+                using (var db = new iTaskcontext())
+                {
+                    var gestor = db.Gestores.FirstOrDefault(g => g.Username == frmLogin.SessaoUtilizador.Username);
+                    if (gestor != null)
+                    {
+                        frmTarefaGestor formTarefaGestor = new frmTarefaGestor();
+                        formTarefaGestor.ShowDialog();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Erro: gestor não encontrado.");
+                    }
+                }
+            }
+        }
+
+        private void lstTodo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

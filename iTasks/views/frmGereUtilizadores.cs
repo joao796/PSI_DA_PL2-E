@@ -285,5 +285,10 @@ namespace iTasks
                 MessageBox.Show("Este programador tem tarefas associadas.");
             }
         }
+
+        private void label12_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

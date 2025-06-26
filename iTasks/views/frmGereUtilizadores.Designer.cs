@@ -164,6 +164,7 @@
             this.label12.Size = new System.Drawing.Size(105, 13);
             this.label12.TabIndex = 45;
             this.label12.Text = "Numero de gestores:";
+            this.label12.Click += new System.EventHandler(this.label12_Click);
             // 
             // btnEliminarGestor
             // 
